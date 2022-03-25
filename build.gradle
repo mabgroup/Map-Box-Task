@@ -1,0 +1,150 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        def kotlin_version = '1.5.31'
+        def coreKtx_version = '1.7.0'
+        def appcompat_version = '1.3.1'
+        def constraint_layout_version = '2.0.4'
+        def legacy_version = '1.0.0'
+        def cardView_version = '1.0.0'
+        def recyclerview_version = '1.2.1'
+        def androidx_test_version = '1.4.0'
+        def coroutines_android_version = '1.5.2'
+        def espresso_version = '3.4.0'
+        def gson_version = '2.8.6'
+        def junit_version = '4.13.2'
+        def lifecycle_version = '2.4.0'
+        def livedata_version = '2.2.0-rc02'
+        def material_version = '1.4.0'
+        def retrofit_gson_version = '2.6.2'
+        def retrofit_version = '2.9.0'
+        def logging_interceptor_version = '4.9.0'
+        def truth_version = '1.1.3'
+        def room_version = '2.4.0-beta01'
+        def work_version = '2.7.0'
+        def multidex_version = '2.0.1'
+        def timber_version = '5.0.1'
+        def glide_version = '4.12.0'
+        def navigation_version = '2.3.5'
+        def rxjava2_version = '2.2.21'
+        def rxAndroid2_version = '2.1.1'
+        def koin_version = '3.1.2'
+        def hawk_version = '2.0.1'
+        def picasso_version = '2.71828'
+        def shimmer_version = '0.5.0'
+        def persian_date_version = '1.3.4'
+        def chuck_version = '3.5.2'
+        def paging_version = '3.1.0-beta01'
+        def sqlcipher_version = '4.4.2'
+        def sqlite_ktx_version = '2.1.0'
+        def image_picker = '2.1'
+        def coil_version = '1.4.0'
+        def data_picker_version = '1.7.1'
+        def lifecycle_test_version = '2.1.0'
+
+
+        apiLibraries = [
+                "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+                "androidx.core:core-ktx:$coreKtx_version",
+                "androidx.appcompat:appcompat:$appcompat_version",
+                "androidx.constraintlayout:constraintlayout:$constraint_layout_version",
+                "androidx.legacy:legacy-support-v4:$legacy_version",
+                "androidx.cardview:cardview:$cardView_version",
+                "androidx.recyclerview:recyclerview:$recyclerview_version",
+                "com.google.android.material:material:$material_version",
+                "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version",
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version",
+                "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
+                "com.squareup.retrofit2:retrofit:$retrofit_version",
+                "com.squareup.retrofit2:converter-gson:$retrofit_version",
+                "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version",
+                "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version",
+                "com.jakewharton.timber:timber:$timber_version",
+                "com.github.bumptech.glide:glide:$glide_version",
+                "androidx.navigation:navigation-fragment-ktx:$navigation_version",
+                "androidx.navigation:navigation-ui-ktx:$navigation_version",
+                "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version",
+                "io.reactivex.rxjava2:rxjava:$rxjava2_version",
+                "io.reactivex.rxjava2:rxandroid:$rxAndroid2_version",
+                "androidx.room:room-runtime:$room_version",
+                "androidx.room:room-rxjava2:$room_version",
+                "androidx.room:room-paging:$room_version",
+                "androidx.room:room-ktx:$room_version",
+                "io.insert-koin:koin-android:$koin_version",
+                "com.orhanobut:hawk:$hawk_version",
+                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_android_version",
+                "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_android_version",
+                "com.squareup.picasso:picasso:$picasso_version",
+                "com.facebook.shimmer:shimmer:$shimmer_version",
+                //"com.github.samanzamani:PersianDate:$persian_date_version",
+                "androidx.paging:paging-runtime:$paging_version",
+                "androidx.paging:paging-rxjava2:$paging_version",
+                //"net.zetetic:android-database-sqlcipher:$sqlcipher_version",
+                "androidx.sqlite:sqlite-ktx:$sqlite_ktx_version",
+                //"com.github.dhaval2404:imagepicker:$image_picker",
+                "io.coil-kt:coil:$coil_version",
+                //"com.github.aliab:Persian-Date-Picker-Dialog:$data_picker_version",
+                "com.github.chuckerteam.chucker:library:$chuck_version"
+
+        ]
+
+        implementationLibraries = [
+                "androidx.multidex:multidex:$multidex_version",
+                "com.github.bumptech.glide:compiler:$glide_version",
+                "com.squareup.okhttp3:okhttp:$logging_interceptor_version"
+        ]
+
+        librariesKapt = [
+                "androidx.room:room-compiler:$room_version",
+                "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+        ]
+        testLibraries = [
+                "junit:junit:$junit_version",
+                "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android_version",
+                'org.mockito:mockito-core:4.1.0',
+        ]
+
+        androidTestLibraries = [
+                "junit:junit:$junit_version",
+                "androidx.test:runner:$androidx_test_version",
+                "androidx.test:rules:$androidx_test_version",
+                "androidx.test.ext:junit:1.1.3",
+
+                // Espresso
+                "androidx.test.espresso:espresso-core:$espresso_version",
+                "androidx.test.espresso:espresso-contrib:$espresso_version",
+                "androidx.test.espresso:espresso-intents:$espresso_version",
+
+                //  Architecture Components testing libraries
+                "androidx.arch.core:core-testing:$lifecycle_test_version",
+                "androidx.work:work-testing:$work_version",
+
+                // Navigation Component testing
+                "androidx.navigation:navigation-testing:$navigation_version",
+
+                // Coroutines testing
+                "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android_version",
+        ]
+
+        librariesDebug = [
+                "com.google.truth:truth:$truth_version",
+        ]
+    }
+    repositories {
+        google()
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+    }
+    dependencies {
+        def safe_nav = "2.4.1"
+        classpath "com.android.tools.build:gradle:7.0.4"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$safe_nav"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
