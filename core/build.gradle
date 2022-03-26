@@ -17,6 +17,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField 'String', 'BASE_URL', "\"https://\""
+        buildConfigField 'String', 'API_KEY', "\"randomCode\""
     }
 
     buildTypes {
@@ -31,6 +34,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    dataBinding {
+        enabled = true
+    }
+    viewBinding{
+        enabled = true
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
