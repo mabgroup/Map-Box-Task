@@ -1,6 +1,8 @@
 package com.mabdigital.core.base.remote
 
 import com.mabdigital.core.base.adapters.Mapper
+import com.mabdigital.core.base.interceptor.NetworkConnectionException
+import com.mabdigital.core.base.interceptor.networkConnectionNotification
 import com.mabdigital.core.base.markers.DataModel
 import com.mabdigital.core.base.model.ApiError
 import com.mabdigital.core.base.model.GenericResponse
@@ -69,8 +71,13 @@ class NetworkBoundResources<T : Any, SR, M : Mapper<SR, T>>(
 
     private fun handleUndefinedError(e: Throwable?) {
         e?.let {
-            result?.invoke(UseCaseState.Error(it))
-            onUndefinedError?.invoke(it)
+            if(e is NetworkConnectionException) {
+                networkConnectionNotification()
+            }else {
+                result?.invoke(UseCaseState.Error(it))
+                onUndefinedError?.invoke(it)
+                it.printStackTrace()
+            }
         }
     }
 }

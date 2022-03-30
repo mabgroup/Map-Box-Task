@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface_on_primary">#ffffff</color>
+    <color name="on_surface_60">#666666</color>
+    <color name="on_sec_bg_surface">#000000</color>
+    <color name="primary_light">#5776cd</color>
+    <color name="primary_dark">#00246c</color>
+    <color name="secondary">#e6165d</color>
+    <color name="primary">#194b9b</color>
+    <color name="on_warning_message">#9f6000</color>
+    <color name="on_success_message">#1aa55b</color>
+    <color name="on_error_message">#d8000c</color>
+</resources>

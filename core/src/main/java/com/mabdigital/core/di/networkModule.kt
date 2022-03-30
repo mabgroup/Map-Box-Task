@@ -6,6 +6,7 @@ import com.ehsanmohit.taaghche.base.interceptor.RequestHeaderInterceptor
 import com.google.gson.GsonBuilder
 import com.mabdigital.core.BuildConfig
 import com.mabdigital.core.base.connectionlivedata.ConnectionDetectionLiveData
+import com.mabdigital.core.base.interceptor.NetworkConnectionInterceptor
 import com.mabdigital.core.base.remote.adapters.NetworkResponseAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,19 +21,27 @@ val coreNetworkModuleDeclaration = module {
     single {
         androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
+    single { provideNetworkConnectionInterceptor(get()) }
     single {
         ConnectionDetectionLiveData(get())
     }
-    single { provideOkHttpClient(context = androidContext()) }
+    single { provideOkHttpClient(context = androidContext(), networkConnectionInterceptor = get()) }
     single { provideRetrofit(okHttpClient = get(), BASE_URL = BuildConfig.BASE_URL) }
 }
 
-private fun provideOkHttpClient(context: Context): OkHttpClient {
+private fun provideNetworkConnectionInterceptor(connectivityManager: ConnectivityManager) =
+    NetworkConnectionInterceptor(connectivityManager)
+
+private fun provideOkHttpClient(
+    context: Context,
+    networkConnectionInterceptor: NetworkConnectionInterceptor
+): OkHttpClient {
     val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(TEN_SECONDS, TimeUnit.SECONDS)
         .writeTimeout(TEN_SECONDS, TimeUnit.SECONDS)
         .readTimeout(TEN_SECONDS, TimeUnit.SECONDS)
         .addInterceptor(RequestHeaderInterceptor(context))
+        .addInterceptor(networkConnectionInterceptor)
         .followRedirects(false)
 
     if (BuildConfig.DEBUG) {
