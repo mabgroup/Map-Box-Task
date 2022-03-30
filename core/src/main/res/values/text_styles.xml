@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="myapp" >
+        <item name="android:fontFamily">@font/normal</item>
+    </style>
+
+    <style name="myapp.Text" parent="myapp">
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+    </style>
+
+    <style name="myapp.Text.RBlackChipsTitlte14Pt">
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textColor">@color/on_sec_bg_surface</item>
+    </style>
+
+    <style name="myapp.Text.MWhitePrimaryButtom16Pt">
+        <item name="android:fontFamily">@font/medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/textSizeBig</item>
+        <item name="android:letterSpacing">-0.04</item>
+        <item name="android:lineSpacingExtra">12sp</item>
+        <item name="android:textColor">@color/surface_on_primary</item>
+
+    </style>
+
+    <style name="myapp.Text.RGrayCaption14Pt">
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+        <item name="android:textColor">@color/on_surface_60</item>
+
+    </style>
+
+    <style name="myapp.Text.IranSansFaNum24Pt">
+        <item name="android:fontFamily">@font/normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/textSizeExtraHuge</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textColor">@color/on_sec_bg_surface</item>
+
+    </style>
+
+    <style name="myapp.Text.IranSansFaNumPrimary24Pt">
+        <item name="android:fontFamily">@font/normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/textSizeExtraHuge</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textColor">@color/primary</item>
+
+    </style>
+
+</resources>

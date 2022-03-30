@@ -5,7 +5,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
-
+//MayBe Delete this after successful Test of the new NetworkConnection Interceptor!
 class ConnectionDetectionLiveData constructor(private val cm: ConnectivityManager)
     : LiveData<Boolean>() {
 

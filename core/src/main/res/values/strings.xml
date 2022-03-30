@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">core</string>
+
+    <!-- dialogNetworkConnection -->
+    <string name="dialogNetworkConnection_network_disconnected">ارتباط شما با اینترنت قطع می‌باشد</string>
+    <string name="dialogNetworkConnection_check_your_internet">لطفا ارتباط خود را بررسی نمایید.</string>
+    <string name="dialogNetworkConnection_check_network_setting">بررسی تنظیمات</string>
+    <string name="dialogNetworkConnection_check_wifi_setting">تنظیمات Wifi</string>
+    <string name="dialogNetworkConnection_check_data_setting">تنظیمات Data</string>
+    <string name="dialogNetworkConnection_close">متوجه شدم</string>
+</resources>

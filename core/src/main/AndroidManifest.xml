@@ -3,4 +3,19 @@
     package="com.mabdigital.core">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true">
+
+        <receiver
+            android:name=".component.broadcast.NetworkConnectionBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.mabdigital.myapplicationinterview.network.NOT_CONNECTED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
 </manifest>
