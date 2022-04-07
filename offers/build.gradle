@@ -1,21 +1,20 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
-        applicationId "com.mabdigital.myapplicationinterview"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -44,11 +43,6 @@ android {
 
 dependencies {
     implementation project(path: ':core')
-    implementation project(path: ':offers')
-
-    implementation "androidx.multidex:multidex:2.0.1"
-    testImplementation 'junit:junit:4.+'
-
-    /*androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'*/
+    api mapboxlibrary
+    testImplementation testLibraries
 }
