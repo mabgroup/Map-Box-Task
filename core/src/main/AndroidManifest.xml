@@ -9,6 +9,17 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true">
 
+        <activity
+            android:name=".presentation.feature.CoreActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <nav-graph android:value="@navigation/start_up_nav"/>
+        </activity>
+
         <receiver
             android:name=".component.broadcast.NetworkConnectionBroadcastReceiver"
             android:exported="true">

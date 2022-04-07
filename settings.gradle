@@ -3,9 +3,21 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                username = "mapbox"
+                // Use the secret token you stored in gradle.properties as the password
+                password = MAPBOX_DOWNLOADS_TOKEN
+            }
+        }
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "My Application Interview"
 include ':app'
 include ':core'
+include ':offers'
