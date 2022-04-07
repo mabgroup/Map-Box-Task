@@ -2,4 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mabdigital.offers">
 
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <activity
+            android:name=".presentaton.feature.activity.OffersActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.mabdigital.offers" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+            <nav-graph android:value="@navigation/offers_main_graph"/>
+        </activity>
+    </application>
+
 </manifest>

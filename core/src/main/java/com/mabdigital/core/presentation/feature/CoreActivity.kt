@@ -7,7 +7,9 @@ import com.mabdigital.core.presentation.router.offerIntent
 
 class CoreActivity : BaseActivity() {
 
-    override fun navigationGraph(): Int = R.navigation.start_up_nav
+    override fun navigationGraph(): Int {
+        return R.navigation.start_up_nav
+    }
 
     override fun doOnCreate(savedInstanceState: Bundle?) {}
 
