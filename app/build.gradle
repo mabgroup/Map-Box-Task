@@ -44,6 +44,7 @@ android {
 
 dependencies {
     implementation project(path: ':core')
+    implementation project(path: ':offers')
 
     implementation "androidx.multidex:multidex:2.0.1"
     testImplementation 'junit:junit:4.+'
