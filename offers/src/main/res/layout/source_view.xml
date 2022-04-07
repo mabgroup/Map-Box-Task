@@ -8,6 +8,6 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="@dimen/icon_size_32dp"
         android:layout_height="@dimen/icon_size_32dp"
-        app:srcCompat="@drawable/ic_source_map_pin"/>
+        app:srcCompat="@drawable/ic_map_pin_icon_green"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
