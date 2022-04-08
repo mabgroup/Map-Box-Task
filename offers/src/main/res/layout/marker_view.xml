@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_source_map_pin" />
+        app:srcCompat="@drawable/ic_map_pin" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dest_id"

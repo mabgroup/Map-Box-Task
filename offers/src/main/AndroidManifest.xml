@@ -8,7 +8,8 @@
         android:supportsRtl="true">
         <activity
             android:name=".presentaton.feature.activity.OffersActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.MyApplicationInterview.Offers">
             <intent-filter>
                 <action android:name="com.mabdigital.offers" />
                 <category android:name="android.intent.category.DEFAULT" />
