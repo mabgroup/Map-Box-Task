@@ -54,5 +54,12 @@
 
     <!-- Button Height -->
     <dimen name="button_height_normal">56dp</dimen>
+    <dimen name="big_radius">150dp</dimen>
+
+    <!-- radius -->
+    <dimen name="radius_2dp">2dp</dimen>
+    <dimen name="radius_4dp">4dp</dimen>
+    <dimen name="radius_6dp">6dp</dimen>
+    <dimen name="radius_8dp">8dp</dimen>
 
 </resources>
