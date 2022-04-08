@@ -63,16 +63,19 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         setupView()
-        view.post {
-            val dialogWindow: Window? = dialog!!.window
+        configView()
+    }
 
-            // Make the dialog possible to be outside touch
+
+
+    private fun configView() {
+        view?.post {
+            val dialogWindow: Window? = dialog!!.window
             dialogWindow?.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
             )
-
-            view.invalidate()
+            view?.invalidate()
         }
     }
 
@@ -80,6 +83,9 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         val price =
             String.format("%s ريال", NumberFormat.getIntegerInstance().format(args.price.toLong()))
         binding.priceHolder.text = price
+        binding.userLocation.setOnClickListener {
+            mViewModel.onEvent(MapActionEvent.OnUserLocationClick)
+        }
     }
 
     private fun setupList() {

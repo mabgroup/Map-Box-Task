@@ -9,6 +9,7 @@ class OfferShareViewModel : BaseViewModel<MapActionState,MapActionEvent>() {
     override fun onEvent(uiEvent: MapActionEvent) {
         when(uiEvent) {
             is MapActionEvent.OnPointClicked -> state.postValue(MapActionState.MoveToPoint(uiEvent.point))
+            is MapActionEvent.OnUserLocationClick -> state.postValue(MapActionState.MoveToUser)
         }
     }
 }

@@ -19,26 +19,21 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.*
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.annotation.AnnotationConfig
-import com.mapbox.maps.plugin.annotation.AnnotationType
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
-import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
-import com.mapbox.maps.viewannotation.viewAnnotationOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
 
     private val mViewModel by sharedViewModel<OfferShareViewModel>()
-
+    private var userLocationPoint: Point? = null
     private val listData = mutableListOf(
         PointDetails(
             Point.fromLngLat(51.3266, 35.7302),
@@ -69,6 +64,7 @@ class MapFragment : Fragment() {
     }
     private val onIndicatorPositionChangedListener by lazy {
         OnIndicatorPositionChangedListener {
+            userLocationPoint = it
             binding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
             binding.mapView.gestures.focalPoint =
                 binding.mapView.getMapboxMap().pixelForCoordinate(it)
@@ -109,7 +105,7 @@ class MapFragment : Fragment() {
 
     private fun loadDetails() {
         val direction = MapFragmentDirections.actionMapFragmentToOfferDetailsFragment(
-            listData.toTypedArray(),"2000000"
+            listData.toTypedArray(), "2000000"
         )
         findNavController().navigate(direction)
     }
@@ -117,16 +113,17 @@ class MapFragment : Fragment() {
     private fun setupViewModelObserver() {
         mViewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
-                is MapActionState.MoveToPoint -> moveCamera(it.point)
+                is MapActionState.MoveToPoint -> moveCamera(it.locationDetails.point)
+                is MapActionState.MoveToUser -> userLocationPoint?.let {lastLocation-> moveCamera(lastLocation,11.0) }
             }
         }
     }
 
-    private fun moveCamera(point: PointDetails) {
+    private fun moveCamera(point: Point,zoomV:Double=16.0) {
         onCameraTrackingDismissed()
         val cameraPosition = CameraOptions.Builder()
-            .zoom(18.0)
-            .center(point.point)
+            .zoom(zoomV)
+            .center(point)
             .build()
         binding.mapView.getMapboxMap().setCamera(
             cameraPosition
@@ -143,7 +140,7 @@ class MapFragment : Fragment() {
     private fun onMapReady() {
         binding.mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
-                .zoom(14.0)
+                .zoom(13.0)
                 .build()
         )
         binding.mapView.getMapboxMap().loadStyleUri(
