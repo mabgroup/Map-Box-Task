@@ -8,6 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
+import com.mabdigital.offers.domain.feature.map.MapActionState
 import com.mabdigital.offers.domain.model.map.PointDetails
 import com.mabdigital.offers.domain.model.map.TerminalLocationTypeEnum
 import com.mabdigital.offers.presentaton.feature.activity.OfferShareViewModel
@@ -17,6 +18,9 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.*
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.annotation.annotations
+import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
+import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
@@ -49,7 +53,6 @@ class MapFragment : Fragment() {
                 binding.mapView.getMapboxMap().pixelForCoordinate(it)
         }
     }
-
     private val onMoveListener = object : OnMoveListener {
         override fun onMoveBegin(detector: MoveGestureDetector) {
             onCameraTrackingDismissed()
@@ -79,6 +82,25 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startMapAfterCheckPermissions()
+        setupViewModelObserver()
+    }
+
+    private fun setupViewModelObserver() {
+        mViewModel.getState().observe(viewLifecycleOwner) {
+            when(it) {
+                is MapActionState.MoveToPoint -> moveCamera(it.point)
+            }
+        }
+    }
+
+    private fun moveCamera(point: PointDetails) {
+        val cameraPosition = CameraOptions.Builder()
+            .zoom(14.0)
+            .center(point.point)
+            .build()
+        binding.mapView.getMapboxMap().setCamera(
+            cameraPosition
+        )
     }
 
     private fun startMapAfterCheckPermissions() {
@@ -101,8 +123,22 @@ class MapFragment : Fragment() {
             setupGesturesListener()
             printPoint(binding.mapView, listData)
         }
+        initOnPointClick()
     }
-
+    private fun initOnPointClick() {
+        binding.mapView.annotations.createPointAnnotationManager().apply {
+            addClickListener(
+                OnPointAnnotationClickListener {
+                    val cameraPosition = CameraOptions.Builder()
+                        .zoom(14.0)
+                        .center(it.point)
+                        .build()
+                    binding.mapView.getMapboxMap().setCamera(cameraPosition)
+                    true
+                }
+            )
+        }
+    }
     private fun initLocationComponent() {
         val locationComponentPlugin = binding.mapView.location
         locationComponentPlugin.updateSettings {
