@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "487953758292",
+    "project_id": "my-application-interview",
+    "storage_bucket": "my-application-interview.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487953758292:android:2f47a2822ab06434b3d5c1",
+        "android_client_info": {
+          "package_name": "com.mabdigital.myapplicationinterview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487953758292-21och2qklus7uvmo3jv5mvh9qnl5ke06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbZ1Ejor4qgxrIOHs7l1iohycsq_3P2Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487953758292-21och2qklus7uvmo3jv5mvh9qnl5ke06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

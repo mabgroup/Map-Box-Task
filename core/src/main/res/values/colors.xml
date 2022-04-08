@@ -6,6 +6,9 @@
     <color name="primary_light">#5776cd</color>
     <color name="primary_dark">#00246c</color>
     <color name="secondary">#e6165d</color>
+    <color name="secondary_dark">#ad0034</color>
+    <color name="medium_emphasis_on_surface_60">#666666</color>
+    <color name="bg">#fafafa</color>
     <color name="primary">#194b9b</color>
     <color name="on_warning_message">#9f6000</color>
     <color name="on_success_message">#1aa55b</color>
