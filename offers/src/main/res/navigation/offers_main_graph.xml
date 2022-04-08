@@ -9,9 +9,20 @@
         android:id="@+id/mapFragment"
         android:name="com.mabdigital.offers.presentaton.feature.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/map_load_view"/>
+        tools:layout="@layout/map_load_view">
+        <action
+            android:id="@+id/action_mapFragment_to_offerDetailsFragment"
+            app:destination="@id/offerDetailsFragment" />
+    </fragment>
     <dialog
         android:id="@+id/offerDetailsFragment"
         android:name="com.mabdigital.offers.presentaton.feature.details.OfferDetailsFragment"
-        android:label="OfferDetailsFragment" />
+        android:label="OfferDetailsFragment" >
+        <argument
+            android:name="pointlist"
+            app:argType="com.mabdigital.offers.domain.model.map.PointDetails[]" />
+        <argument
+            android:name="price"
+            app:argType="string" />
+    </dialog>
 </navigation>

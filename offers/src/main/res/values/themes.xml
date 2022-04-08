@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="blue_button" parent="Widget.MaterialComponents.Button.OutlinedButton">
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.MyApplicationInterview.Offers" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_light</item>
+        <item name="colorOnPrimary">@color/surface_on_primary</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/primary_dark</item>
+        <item name="colorOnSecondary">@color/on_sec_bg_surface</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/medium_emphasis_on_surface_60</item>
+        <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog_Rounded</item>
+        <item name="fontFamily">@font/normal</item>
+        <item name="android:fontFamily">@font/normal</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="blue_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="cornerRadius">25dp</item>
         <item name="shapeAppearanceOverlay">@style/buttonShape</item>
         <item name="android:textAppearance">@style/myapp.Text.MWhitePrimaryButtom16Pt</item>
@@ -12,5 +32,22 @@
         <item name="cornerSizeTopLeft">24dp</item>
         <item name="cornerSizeBottomRight">24dp</item>
         <item name="cornerSizeBottomLeft">24dp</item>
+    </style>
+
+    <style name="BottomSheetDialog_Rounded" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet_Rounded</item>
+    </style>
+
+    <style name="BottomSheet_Rounded" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceBottomSheetDialog_Rounded</item>
+        <item name="backgroundTint">@color/bg</item>
+    </style>
+
+    <style name="ShapeAppearanceBottomSheetDialog_Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 </resources>
