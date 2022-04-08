@@ -10,12 +10,11 @@ import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.model.map.PointDetails
 import com.mabdigital.offers.domain.model.map.TerminalLocationTypeEnum
+import com.mabdigital.offers.presentaton.feature.activity.OfferShareViewModel
 import com.mabdigital.offers.tools.locationpermission.LocationPermissionHelper
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.MapboxExperimental
-import com.mapbox.maps.Style
+import com.mapbox.maps.*
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
 import com.mapbox.maps.plugin.gestures.OnMoveListener
@@ -24,10 +23,19 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
 
+    private val mViewModel by viewModel<OfferShareViewModel>()
+
+    private val listData = mutableListOf(
+        PointDetails(Point.fromLngLat(51.3266, 35.7302),"تهران صادقیه اباذر" ,TerminalLocationTypeEnum.Source),
+        PointDetails(Point.fromLngLat(51.3175, 35.7349),"مقصد اول", TerminalLocationTypeEnum.Destination),
+        PointDetails(Point.fromLngLat(51.3133, 35.7304),"مقصد دوم", TerminalLocationTypeEnum.Destination),
+        PointDetails(Point.fromLngLat(51.3211, 35.7324),"مقصد سوم", TerminalLocationTypeEnum.Destination),
+    )
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private val onIndicatorBearingChangedListener by lazy {
         OnIndicatorBearingChangedListener {
@@ -37,7 +45,8 @@ class MapFragment : Fragment() {
     private val onIndicatorPositionChangedListener by lazy {
         OnIndicatorPositionChangedListener {
             binding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
-            binding.mapView.gestures.focalPoint = binding.mapView.getMapboxMap().pixelForCoordinate(it)
+            binding.mapView.gestures.focalPoint =
+                binding.mapView.getMapboxMap().pixelForCoordinate(it)
         }
     }
 
@@ -90,13 +99,7 @@ class MapFragment : Fragment() {
         ) {
             initLocationComponent()
             setupGesturesListener()
-            printPoint(binding.mapView,
-                mutableListOf(
-                PointDetails(Point.fromLngLat(51.3266,35.7302),TerminalLocationTypeEnum.Source),
-                PointDetails(Point.fromLngLat(51.3175,35.7349),TerminalLocationTypeEnum.Destination),
-                PointDetails(Point.fromLngLat(51.3133,35.7304),TerminalLocationTypeEnum.Destination),
-                PointDetails(Point.fromLngLat(51.3211,35.7324),TerminalLocationTypeEnum.Destination),
-            ))
+            printPoint(binding.mapView, listData)
         }
     }
 
@@ -127,13 +130,19 @@ class MapFragment : Fragment() {
                 }.toJson()
             )
         }
-        locationComponentPlugin.addOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        locationComponentPlugin.addOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
+        locationComponentPlugin.addOnIndicatorPositionChangedListener(
+            onIndicatorPositionChangedListener
+        )
+        locationComponentPlugin.addOnIndicatorBearingChangedListener(
+            onIndicatorBearingChangedListener
+        )
 
     }
+
     private fun setupGesturesListener() {
         binding.mapView.gestures.addOnMoveListener(onMoveListener)
     }
+
     private fun onCameraTrackingDismissed() {
         binding.mapView.location
             .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
@@ -151,6 +160,7 @@ class MapFragment : Fragment() {
         binding.mapView.gestures.removeOnMoveListener(onMoveListener)
         _binding = null
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -158,5 +168,22 @@ class MapFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun getBoundArea(pointList: MutableList<Point>) : CameraBoundsOptions {
+        pointList.sortBy { it.longitude() }
+        return CameraBoundsOptions.Builder()
+            .bounds(
+                CoordinateBounds(
+                    pointList.last(),
+                    pointList.first(),
+                    false
+                )
+            )
+            .build()
+    }
+
+    private fun setupBounds(bounds: CameraBoundsOptions) {
+        binding.mapView.getMapboxMap().setBounds(bounds)
     }
 }

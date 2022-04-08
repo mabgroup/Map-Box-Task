@@ -4,6 +4,7 @@ import com.mapbox.geojson.Point
 
 data class PointDetails(
     val point:Point,
+    val pointAddress:String,
     val type: TerminalLocationTypeEnum
 )
 
