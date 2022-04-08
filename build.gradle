@@ -41,7 +41,7 @@ buildscript {
         def retrofit_gson_version = '2.6.2'
         def gson_version = '2.8.6'
         def livedata_version = '2.2.0-rc02'
-
+        def FCM_VERSION = '23.0.2'
         apiLibraries = [
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
                 "androidx.core:core-ktx:$coreKtx_version",
@@ -79,7 +79,8 @@ buildscript {
                 "androidx.paging:paging-rxjava2:$paging_version",
                 "androidx.sqlite:sqlite-ktx:$sqlite_ktx_version",
                 "io.coil-kt:coil:$coil_version",
-                "com.github.chuckerteam.chucker:library:$chuck_version"
+                "com.github.chuckerteam.chucker:library:$chuck_version",
+                "com.google.firebase:firebase-messaging:$FCM_VERSION"
                 //"net.zetetic:android-database-sqlcipher:$sqlcipher_version",
                 //"com.github.samanzamani:PersianDate:$persian_date_version",
                 //"com.github.dhaval2404:imagepicker:$image_picker",
@@ -139,6 +140,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath 'com.google.gms:google-services:4.3.10'
         def safe_nav = "2.4.1"
         def kotlin_version = "1.6.20"
         classpath 'com.android.tools.build:gradle:7.1.2'
