@@ -40,7 +40,9 @@
 
     <style name="BottomSheet_Rounded" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceBottomSheetDialog_Rounded</item>
-        <item name="backgroundTint">@color/bg</item>
+        <!--<item name="backgroundTint">@color/bg</item>-->
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
     </style>
 
     <style name="ShapeAppearanceBottomSheetDialog_Rounded" parent="">

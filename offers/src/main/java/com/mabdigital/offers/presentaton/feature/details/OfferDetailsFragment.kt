@@ -1,32 +1,51 @@
 package com.mabdigital.offers.presentaton.feature.details
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.DeatilsBottomSheetBinding
-import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionEvent
 import com.mabdigital.offers.presentaton.feature.activity.OfferShareViewModel
 import io.reactivex.disposables.CompositeDisposable
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.NumberFormat
 
 class OfferDetailsFragment : BottomSheetDialogFragment() {
 
-    private val mViewModel by viewModel<OfferShareViewModel>()
+    private val mViewModel by sharedViewModel<OfferShareViewModel>()
 
     private val args by navArgs<OfferDetailsFragmentArgs>()
     private val compositeDisposable = CompositeDisposable()
     private var _binding: DeatilsBottomSheetBinding? = null
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_FRAME, 0);
+        this.isCancelable = false
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
+        val dialog = BottomSheetDialog(requireContext(), theme)
+        dialog.setOnShowListener {
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.behavior.isFitToContents = true
+            dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            dialog.behavior.isDraggable = true
+            dialog.behavior.isHideable = false
+
+            val bottomSheet = dialog.findViewById<View>(
+                com.google.android.material.R.id.design_bottom_sheet
+            )
+            bottomSheet?.setBackgroundColor(Color.TRANSPARENT)
+
+        }
+        return dialog
     }
 
     override fun onCreateView(
@@ -35,8 +54,8 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        if(_binding==null)
-            _binding = DeatilsBottomSheetBinding.inflate(inflater,container,false)
+        if (_binding == null)
+            _binding = DeatilsBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,10 +63,22 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         setupView()
+        view.post {
+            val dialogWindow: Window? = dialog!!.window
+
+            // Make the dialog possible to be outside touch
+            dialogWindow?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            )
+
+            view.invalidate()
+        }
     }
 
     private fun setupView() {
-        val price = String.format(getString(R.string.template_price),NumberFormat.getIntegerInstance().format(args.price.toLong()))
+        val price =
+            String.format("%s ريال", NumberFormat.getIntegerInstance().format(args.price.toLong()))
         binding.priceHolder.text = price
     }
 
@@ -66,4 +97,8 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
 }

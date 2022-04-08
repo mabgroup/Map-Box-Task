@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionState
@@ -18,27 +19,47 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.*
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.annotation.AnnotationConfig
+import com.mapbox.maps.plugin.annotation.AnnotationType
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
 
-    private val mViewModel by viewModel<OfferShareViewModel>()
+    private val mViewModel by sharedViewModel<OfferShareViewModel>()
 
     private val listData = mutableListOf(
-        PointDetails(Point.fromLngLat(51.3266, 35.7302),"تهران صادقیه اباذر" ,TerminalLocationTypeEnum.Source),
-        PointDetails(Point.fromLngLat(51.3175, 35.7349),"مقصد اول", TerminalLocationTypeEnum.Destination),
-        PointDetails(Point.fromLngLat(51.3133, 35.7304),"مقصد دوم", TerminalLocationTypeEnum.Destination),
-        PointDetails(Point.fromLngLat(51.3211, 35.7324),"مقصد سوم", TerminalLocationTypeEnum.Destination),
+        PointDetails(
+            Point.fromLngLat(51.3266, 35.7302),
+            "تهران صادقیه اباذر",
+            TerminalLocationTypeEnum.Source
+        ),
+        PointDetails(
+            Point.fromLngLat(51.3175, 35.7349),
+            "مقصد اول",
+            TerminalLocationTypeEnum.Destination
+        ),
+        PointDetails(
+            Point.fromLngLat(51.3133, 35.7304),
+            "مقصد دوم",
+            TerminalLocationTypeEnum.Destination
+        ),
+        PointDetails(
+            Point.fromLngLat(51.3211, 35.7324),
+            "مقصد سوم",
+            TerminalLocationTypeEnum.Destination
+        ),
     )
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private val onIndicatorBearingChangedListener by lazy {
@@ -83,19 +104,28 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         startMapAfterCheckPermissions()
         setupViewModelObserver()
+        loadDetails()
+    }
+
+    private fun loadDetails() {
+        val direction = MapFragmentDirections.actionMapFragmentToOfferDetailsFragment(
+            listData.toTypedArray(),"2000000"
+        )
+        findNavController().navigate(direction)
     }
 
     private fun setupViewModelObserver() {
         mViewModel.getState().observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is MapActionState.MoveToPoint -> moveCamera(it.point)
             }
         }
     }
 
     private fun moveCamera(point: PointDetails) {
+        onCameraTrackingDismissed()
         val cameraPosition = CameraOptions.Builder()
-            .zoom(14.0)
+            .zoom(18.0)
             .center(point.point)
             .build()
         binding.mapView.getMapboxMap().setCamera(
@@ -125,8 +155,10 @@ class MapFragment : Fragment() {
         }
         initOnPointClick()
     }
+
     private fun initOnPointClick() {
-        binding.mapView.annotations.createPointAnnotationManager().apply {
+        val x = binding.mapView.annotations.createPointAnnotationManager()
+        x.apply {
             addClickListener(
                 OnPointAnnotationClickListener {
                     val cameraPosition = CameraOptions.Builder()
@@ -139,6 +171,7 @@ class MapFragment : Fragment() {
             )
         }
     }
+
     private fun initLocationComponent() {
         val locationComponentPlugin = binding.mapView.location
         locationComponentPlugin.updateSettings {
@@ -206,7 +239,7 @@ class MapFragment : Fragment() {
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun getBoundArea(pointList: MutableList<Point>) : CameraBoundsOptions {
+    private fun getBoundArea(pointList: MutableList<Point>): CameraBoundsOptions {
         pointList.sortBy { it.longitude() }
         return CameraBoundsOptions.Builder()
             .bounds(
