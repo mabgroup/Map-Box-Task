@@ -16,21 +16,20 @@ import timber.log.Timber
 
 class CoreActivity : BaseActivity() {
 
-    override fun navigationGraph(): Int {
-        return R.navigation.start_up_nav
-    }
+    override fun navigationGraph(): Int? = null
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
         observeFireBaseToken()
-        getData()
+        navigateToOffers()
+        //getData()
     }
 
-    private fun getData() {
+    /*private fun getData() {
         val data = intent.getParcelableExtra<NotificationModel>(NOTIFICATION_DATA)
         data?.run {
             startActivity(offerIntent(baseContext,this))
         }
-    }
+    }*/
 
     private fun observeFireBaseToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
