@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.mabdigital.core.base.model.NotificationModel
+import com.mabdigital.core.base.notification.NOTIFICATION_DATA
 import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionState
@@ -34,28 +36,7 @@ class MapFragment : Fragment() {
 
     private val mViewModel by sharedViewModel<OfferShareViewModel>()
     private var userLocationPoint: Point? = null
-    private val listData = mutableListOf(
-        PointDetails(
-            Point.fromLngLat(51.3266, 35.7302),
-            "تهران صادقیه اباذر",
-            TerminalLocationTypeEnum.Source
-        ),
-        PointDetails(
-            Point.fromLngLat(51.3175, 35.7349),
-            "مقصد اول",
-            TerminalLocationTypeEnum.Destination
-        ),
-        PointDetails(
-            Point.fromLngLat(51.3133, 35.7304),
-            "مقصد دوم",
-            TerminalLocationTypeEnum.Destination
-        ),
-        PointDetails(
-            Point.fromLngLat(51.3211, 35.7324),
-            "مقصد سوم",
-            TerminalLocationTypeEnum.Destination
-        ),
-    )
+    private val listData = mutableListOf<PointDetails>()
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private val onIndicatorBearingChangedListener by lazy {
         OnIndicatorBearingChangedListener {
@@ -98,9 +79,33 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        readNotificationData {
+            convertNotificationToPointDetails(it)
+        }
         startMapAfterCheckPermissions()
         setupViewModelObserver()
-        loadDetails()
+    }
+
+    private inline fun readNotificationData(onNotificationDataFound:(NotificationModel?)->Unit) {
+        arguments?.run {
+            val notificationModel = this.getParcelable<NotificationModel>(NOTIFICATION_DATA)
+            onNotificationDataFound(notificationModel)
+        }
+    }
+
+    private fun convertNotificationToPointDetails(notificationModel: NotificationModel?) {
+        notificationModel?.let {
+            it.array.forEach { data ->
+                listData.add(
+                    PointDetails(
+                        Point.fromLngLat(data.Longitude,data.Latitude),
+                        data.address,
+                        TerminalLocationTypeEnum.toType(data.type)
+                    )
+                )
+            }
+            loadDetails()
+        }
     }
 
     private fun loadDetails() {
@@ -148,7 +153,7 @@ class MapFragment : Fragment() {
         ) {
             initLocationComponent()
             setupGesturesListener()
-            printPoint(binding.mapView, listData)
+            if(listData.isNotEmpty()) printPoint(binding.mapView, listData)
         }
         initOnPointClick()
     }
@@ -219,11 +224,7 @@ class MapFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.mapView.location
-            .removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
-        binding.mapView.location
-            .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        binding.mapView.gestures.removeOnMoveListener(onMoveListener)
+        onCameraTrackingDismissed()
         _binding = null
     }
 
@@ -234,22 +235,5 @@ class MapFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private fun getBoundArea(pointList: MutableList<Point>): CameraBoundsOptions {
-        pointList.sortBy { it.longitude() }
-        return CameraBoundsOptions.Builder()
-            .bounds(
-                CoordinateBounds(
-                    pointList.last(),
-                    pointList.first(),
-                    false
-                )
-            )
-            .build()
-    }
-
-    private fun setupBounds(bounds: CameraBoundsOptions) {
-        binding.mapView.getMapboxMap().setBounds(bounds)
     }
 }

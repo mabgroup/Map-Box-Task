@@ -1,4 +1,4 @@
-package com.mabdigital.offers.tools.locationpermission
+package com.mabdigital.offers.tools
 
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView

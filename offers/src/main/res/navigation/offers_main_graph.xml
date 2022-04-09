@@ -17,7 +17,8 @@
     <dialog
         android:id="@+id/offerDetailsFragment"
         android:name="com.mabdigital.offers.presentaton.feature.details.OfferDetailsFragment"
-        android:label="OfferDetailsFragment" >
+        android:label="OfferDetailsFragment"
+        tools:layout="@layout/deatils_bottom_sheet">
         <argument
             android:name="pointlist"
             app:argType="com.mabdigital.offers.domain.model.map.PointDetails[]" />
