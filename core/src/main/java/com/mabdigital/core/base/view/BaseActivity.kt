@@ -8,9 +8,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
 import com.mabdigital.core.R
+import com.mabdigital.core.base.model.NotificationModel
+import com.mabdigital.core.base.notification.NOTIFICATION_DATA
 import com.mabdigital.core.databinding.ActivityBaseBinding
 
 abstract class BaseActivity : AppCompatActivity() {
+    protected lateinit var navHostFragment: NavHostFragment
     private lateinit var baseBinding :ActivityBaseBinding
     private var navController: NavController? = null
 
@@ -24,7 +27,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun initializeNavigationGraph() {
         navigationGraph()?.let {
-            val navHostFragment =
+            navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
             navController?.setGraph(it)
