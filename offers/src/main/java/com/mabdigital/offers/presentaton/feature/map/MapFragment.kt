@@ -27,17 +27,10 @@ import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
-
-    private val job = Job()
-    private val fragmentScope = CoroutineScope(Dispatchers.Default+ job)
-
     private val mViewModel by sharedViewModel<OfferShareViewModel>()
     private var userLocationPoint: Point? = null
 
@@ -46,13 +39,13 @@ class MapFragment : Fragment() {
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private val onIndicatorBearingChangedListener by lazy {
         OnIndicatorBearingChangedListener {
-            binding.mapView.indicatorBearingChangedListener()
+            mapView.indicatorBearingChangedListener()
         }
     }
     private val onIndicatorPositionChangedListener by lazy {
         OnIndicatorPositionChangedListener {
             userLocationPoint = it
-            binding.mapView.onLocationChangeConfig(it)
+            mapView.onLocationChangeConfig(it)
         }
     }
     private val onMoveListener = object : OnMoveListener {
@@ -69,6 +62,7 @@ class MapFragment : Fragment() {
 
     private var _binding: MapLoadViewBinding? = null
     private val binding get() = _binding!!
+    private val mapView by lazy { binding.mapView }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,7 +84,7 @@ class MapFragment : Fragment() {
         setupViewModelObserver()
     }
 
-    private inline fun readNotificationData(onNotificationDataFound:(NotificationModel?)->Unit) {
+    private inline fun readNotificationData(onNotificationDataFound: (NotificationModel?) -> Unit) {
         requireActivity().intent?.extras?.run {
             val notificationModel = getParcelable<NotificationModel>(NOTIFICATION_DATA)
             onNotificationDataFound(notificationModel)
@@ -99,9 +93,10 @@ class MapFragment : Fragment() {
 
     private fun convertNotificationToPointDetails(notificationModel: NotificationModel?) {
         notificationModel.getPointListModel {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 listData.addAll(it)
-                loadDetails(notificationModel?.price?:"0")
+                printPoint(mapView, listData)
+                loadDetails(notificationModel?.price ?: "0")
             }
         }
     }
@@ -117,14 +112,19 @@ class MapFragment : Fragment() {
         mViewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 is MapActionState.MoveToPoint -> moveCamera(it.locationDetails.point)
-                is MapActionState.MoveToUser -> userLocationPoint?.let {lastLocation-> moveCamera(lastLocation,12.0) }
+                is MapActionState.MoveToUser -> userLocationPoint?.let { lastLocation ->
+                    moveCamera(
+                        lastLocation,
+                        13.0
+                    )
+                }
             }
         }
     }
 
-    private fun moveCamera(point: Point,zoomV:Double=16.0) {
+    private fun moveCamera(point: Point, zoomV: Double = 16.0) {
         onCameraTrackingDismissed()
-        binding.mapView.moveCameraToPoint(point,zoomV)
+        mapView.moveCameraToPoint(point, zoomV)
     }
 
     private fun startMapAfterCheckPermissions() {
@@ -135,23 +135,22 @@ class MapFragment : Fragment() {
     }
 
     private fun onMapReady() {
-        binding.mapView.getMapboxMap().setCamera(
+        mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
                 .zoom(13.0)
                 .build()
         )
-        binding.mapView.getMapboxMap().loadStyleUri(
+        mapView.getMapboxMap().loadStyleUri(
             Style.MAPBOX_STREETS
         ) {
             initLocationComponent()
             setupGesturesListener()
-            if(listData.isNotEmpty()) printPoint(binding.mapView, listData)
         }
-        binding.mapView.initOnPointClick()
+        mapView.initOnPointClick()
     }
 
     private fun initLocationComponent() {
-        val locationComponentPlugin = binding.mapView.location
+        val locationComponentPlugin = mapView.location
         locationComponentPlugin.updateSettings {
             this.enabled = true
             this.locationPuck = LocationPuck2D(
@@ -187,15 +186,15 @@ class MapFragment : Fragment() {
     }
 
     private fun setupGesturesListener() {
-        binding.mapView.gestures.addOnMoveListener(onMoveListener)
+        mapView.gestures.addOnMoveListener(onMoveListener)
     }
 
     private fun onCameraTrackingDismissed() {
-        binding.mapView.location
-            .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        binding.mapView.location
-            .removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
-        binding.mapView.gestures.removeOnMoveListener(onMoveListener)
+        with(mapView) {
+            location.removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
+            location.removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
+            gestures.removeOnMoveListener(onMoveListener)
+        }
     }
 
     override fun onDestroy() {
