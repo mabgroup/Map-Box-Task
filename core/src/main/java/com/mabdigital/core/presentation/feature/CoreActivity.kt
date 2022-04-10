@@ -40,7 +40,13 @@ class CoreActivity : BaseActivity() {
     }
 
     fun navigateToOffers() {
-        startActivity(offerIntent(baseContext))
+        startActivity(offerIntent(baseContext, getIntentModel()))
         overridePendingTransition(0, 0)
+    }
+
+    private fun getIntentModel(): NotificationModel? {
+        return intent?.extras?.run {
+            getParcelable(NOTIFICATION_DATA)
+        }
     }
 }

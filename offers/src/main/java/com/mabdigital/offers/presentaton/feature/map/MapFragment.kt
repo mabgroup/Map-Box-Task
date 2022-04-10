@@ -13,42 +13,46 @@ import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionState
 import com.mabdigital.offers.domain.model.map.PointDetails
-import com.mabdigital.offers.domain.model.map.TerminalLocationTypeEnum
 import com.mabdigital.offers.presentaton.feature.activity.OfferShareViewModel
+import com.mabdigital.offers.tools.*
 import com.mabdigital.offers.tools.locationpermission.LocationPermissionHelper
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
-import com.mapbox.maps.*
+import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
 
+    private val job = Job()
+    private val fragmentScope = CoroutineScope(Dispatchers.Default+ job)
+
     private val mViewModel by sharedViewModel<OfferShareViewModel>()
     private var userLocationPoint: Point? = null
+
     private val listData = mutableListOf<PointDetails>()
+
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private val onIndicatorBearingChangedListener by lazy {
         OnIndicatorBearingChangedListener {
-            binding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().bearing(it).build())
+            binding.mapView.indicatorBearingChangedListener()
         }
     }
     private val onIndicatorPositionChangedListener by lazy {
         OnIndicatorPositionChangedListener {
             userLocationPoint = it
-            binding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
-            binding.mapView.gestures.focalPoint =
-                binding.mapView.getMapboxMap().pixelForCoordinate(it)
+            binding.mapView.onLocationChangeConfig(it)
         }
     }
     private val onMoveListener = object : OnMoveListener {
@@ -94,17 +98,11 @@ class MapFragment : Fragment() {
     }
 
     private fun convertNotificationToPointDetails(notificationModel: NotificationModel?) {
-        notificationModel?.let {
-            it.array.forEach { data ->
-                listData.add(
-                    PointDetails(
-                        Point.fromLngLat(data.Longitude,data.Latitude),
-                        data.address,
-                        TerminalLocationTypeEnum.toType(data.type)
-                    )
-                )
+        notificationModel.getPointListModel {
+            if(it.isNotEmpty()) {
+                listData.addAll(it)
+                loadDetails(notificationModel?.price?:"0")
             }
-            loadDetails(it.price)
         }
     }
 
@@ -119,20 +117,14 @@ class MapFragment : Fragment() {
         mViewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 is MapActionState.MoveToPoint -> moveCamera(it.locationDetails.point)
-                is MapActionState.MoveToUser -> userLocationPoint?.let {lastLocation-> moveCamera(lastLocation,11.0) }
+                is MapActionState.MoveToUser -> userLocationPoint?.let {lastLocation-> moveCamera(lastLocation,12.0) }
             }
         }
     }
 
     private fun moveCamera(point: Point,zoomV:Double=16.0) {
         onCameraTrackingDismissed()
-        val cameraPosition = CameraOptions.Builder()
-            .zoom(zoomV)
-            .center(point)
-            .build()
-        binding.mapView.getMapboxMap().setCamera(
-            cameraPosition
-        )
+        binding.mapView.moveCameraToPoint(point,zoomV)
     }
 
     private fun startMapAfterCheckPermissions() {
@@ -155,23 +147,7 @@ class MapFragment : Fragment() {
             setupGesturesListener()
             if(listData.isNotEmpty()) printPoint(binding.mapView, listData)
         }
-        initOnPointClick()
-    }
-
-    private fun initOnPointClick() {
-        val x = binding.mapView.annotations.createPointAnnotationManager()
-        x.apply {
-            addClickListener(
-                OnPointAnnotationClickListener {
-                    val cameraPosition = CameraOptions.Builder()
-                        .zoom(14.0)
-                        .center(it.point)
-                        .build()
-                    binding.mapView.getMapboxMap().setCamera(cameraPosition)
-                    true
-                }
-            )
-        }
+        binding.mapView.initOnPointClick()
     }
 
     private fun initLocationComponent() {
