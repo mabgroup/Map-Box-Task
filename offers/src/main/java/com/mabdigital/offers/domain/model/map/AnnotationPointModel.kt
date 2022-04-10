@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PointDetails(
-    val point:Point,
-    val pointAddress:String,
+    val point: Point,
+    val pointAddress: String,
     val type: TerminalLocationTypeEnum
 ) : Parcelable
 

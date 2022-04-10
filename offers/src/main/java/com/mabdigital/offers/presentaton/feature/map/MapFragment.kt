@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.mabdigital.core.base.model.NotificationModel
+import com.mabdigital.core.base.notification.NOTIFICATION_DATA
 import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionState
@@ -151,7 +153,7 @@ class MapFragment : Fragment() {
         ) {
             initLocationComponent()
             setupGesturesListener()
-            printPoint(binding.mapView, listData)
+            if(listData.isNotEmpty()) printPoint(binding.mapView, listData)
         }
         initOnPointClick()
     }
@@ -222,11 +224,7 @@ class MapFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.mapView.location
-            .removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
-        binding.mapView.location
-            .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        binding.mapView.gestures.removeOnMoveListener(onMoveListener)
+        onCameraTrackingDismissed()
         _binding = null
     }
 
@@ -237,22 +235,5 @@ class MapFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private fun getBoundArea(pointList: MutableList<Point>): CameraBoundsOptions {
-        pointList.sortBy { it.longitude() }
-        return CameraBoundsOptions.Builder()
-            .bounds(
-                CoordinateBounds(
-                    pointList.last(),
-                    pointList.first(),
-                    false
-                )
-            )
-            .build()
-    }
-
-    private fun setupBounds(bounds: CameraBoundsOptions) {
-        binding.mapView.getMapboxMap().setBounds(bounds)
     }
 }
