@@ -21,15 +21,7 @@ class CoreActivity : BaseActivity() {
     override fun doOnCreate(savedInstanceState: Bundle?) {
         observeFireBaseToken()
         navigateToOffers()
-        //getData()
     }
-
-    /*private fun getData() {
-        val data = intent.getParcelableExtra<NotificationModel>(NOTIFICATION_DATA)
-        data?.run {
-            startActivity(offerIntent(baseContext,this))
-        }
-    }*/
 
     private fun observeFireBaseToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -39,7 +31,7 @@ class CoreActivity : BaseActivity() {
             }
             val token = task.result
 
-            Log.w("FCM token:", token)
+            Log.d("CoreActivity", "FCM token: $token")
 
             val isNewToken = MyFirebaseMessagingService.itsNewToken(token)
             if (isNewToken)
