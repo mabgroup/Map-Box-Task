@@ -33,6 +33,7 @@
         android:background="@color/bg">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/lin_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -47,15 +48,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/accept_offer"
+
+            <com.mabdigital.core.base.view.ProgressBarButton
+                android:id="@+id/accept_offer_btn"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_2dp"
                 android:text="@string/accept_offer_btn"
-                style="@style/blue_button"
-                android:layout_gravity="center"
-                />
+                android:layout_gravity="center"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>
 

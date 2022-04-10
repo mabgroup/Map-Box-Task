@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mabdigital.core.base.model.NotificationModel
 import com.mabdigital.core.base.notification.NOTIFICATION_DATA
+import com.mabdigital.core.tools.extentions.finishHoleApp
 import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.MapLoadViewBinding
 import com.mabdigital.offers.domain.feature.map.MapActionState
@@ -64,6 +65,11 @@ class MapFragment : Fragment() {
     private val binding get() = _binding!!
     private val mapView by lazy { binding.mapView }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        finishHoleApp()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,10 +98,11 @@ class MapFragment : Fragment() {
     }
 
     private fun convertNotificationToPointDetails(notificationModel: NotificationModel?) {
+        listData.clear()
         notificationModel.getPointListModel {
             if (it.isNotEmpty()) {
                 listData.addAll(it)
-                printPoint(mapView, listData)
+                mapView.printPoint(listData)
                 loadDetails(notificationModel?.price ?: "0")
             }
         }

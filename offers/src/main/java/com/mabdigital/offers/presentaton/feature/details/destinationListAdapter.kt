@@ -43,7 +43,7 @@ class LocationViewHolder(
                 iconOfDest.destId.visibility = View.GONE
                 ResourcesCompat.getDrawable(
                     itemView.resources,
-                    R.drawable.ic_map_pin_source_green,
+                    R.drawable.ic_pin_source,
                     null
                 )
             } else {

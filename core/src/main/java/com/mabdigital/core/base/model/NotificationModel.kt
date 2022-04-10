@@ -8,7 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class NotificationModel(
     val title: String? = "Notification",
     val body: String? = "Offers For You!",
-    val source: ExtraPoint?,
     val price: String? = "0",
     val array: List<ExtraPoint>
 ) : Parcelable

@@ -10,11 +10,10 @@ class NotificationHelper(val remoteMessage: RemoteMessage) {
     private val gson = Gson()
     fun parseToModel(): NotificationModel {
         val listString = mutableListOf<ExtraPoint>()
-        val sourceInfo = remoteMessage.data["source"] ?: ""
-        val destCount = remoteMessage.data["dest_count"] ?: "0"
+        val destCount = remoteMessage.data["p_count"] ?: "0"
         val price = remoteMessage.data["price"] ?: ""
-        for (i in 1..destCount.toInt()) {
-            val json = remoteMessage.data["dest_$i"] ?: ""
+        for (i in 0 until destCount.toInt()) {
+            val json = remoteMessage.data["p_$i"] ?: ""
             val model:ExtraPoint? = convertJsonToModel(json)
             if (model!=null)
                 listString.add(model)
@@ -22,7 +21,6 @@ class NotificationHelper(val remoteMessage: RemoteMessage) {
         return NotificationModel(
             remoteMessage.data["title"],
             remoteMessage.data["body"],
-            convertJsonToModel(sourceInfo),
             price,
             listString.toList()
         )

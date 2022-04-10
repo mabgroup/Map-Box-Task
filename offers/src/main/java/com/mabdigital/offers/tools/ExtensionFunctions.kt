@@ -50,16 +50,6 @@ fun MapView.initOnPointClick() {
 fun NotificationModel?.getPointListModel(onDone: (MutableList<PointDetails>) -> Unit) {
     this?.let {
         val listData = mutableListOf<PointDetails>()
-        it.source?.run {
-            listData.add(
-                0,
-                PointDetails(
-                    Point.fromLngLat(Longitude, Latitude),
-                    address ?: "",
-                    TerminalLocationTypeEnum.toType(type ?: TerminalLocationTypeEnum.Unknown.name)
-                )
-            )
-        }
         it.array.forEach { data ->
             listData.add(
                 PointDetails(
