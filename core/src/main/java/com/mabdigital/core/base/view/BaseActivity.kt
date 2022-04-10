@@ -13,7 +13,7 @@ import com.mabdigital.core.base.notification.NOTIFICATION_DATA
 import com.mabdigital.core.databinding.ActivityBaseBinding
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected lateinit var navHostFragment: NavHostFragment
+    private lateinit var navHostFragment: NavHostFragment
     private lateinit var baseBinding :ActivityBaseBinding
     private var navController: NavController? = null
 

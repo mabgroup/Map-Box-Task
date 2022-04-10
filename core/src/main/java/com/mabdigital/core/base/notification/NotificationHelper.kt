@@ -22,7 +22,7 @@ class NotificationHelper(val remoteMessage: RemoteMessage) {
         return NotificationModel(
             remoteMessage.data["title"],
             remoteMessage.data["body"],
-            sourceInfo,
+            convertJsonToModel(sourceInfo),
             price,
             listString.toList()
         )

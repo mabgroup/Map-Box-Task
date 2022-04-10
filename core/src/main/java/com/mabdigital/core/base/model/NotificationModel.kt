@@ -8,8 +8,8 @@ import kotlinx.parcelize.Parcelize
 data class NotificationModel(
     val title: String? = "Notification",
     val body: String? = "Offers For You!",
-    val source: String,
-    val price: String,
+    val source: ExtraPoint?,
+    val price: String? = "0",
     val array: List<ExtraPoint>
 ) : Parcelable
 
@@ -20,7 +20,7 @@ data class ExtraPoint(
     @SerializedName("pointy")
     val Longitude: Double,
     @SerializedName("address")
-    val address: String,
+    val address: String? = "",
     @SerializedName("type")
-    val type: String
+    val type: String? = ""
 ) : Parcelable
