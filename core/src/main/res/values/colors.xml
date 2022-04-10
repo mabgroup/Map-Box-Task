@@ -13,4 +13,7 @@
     <color name="on_warning_message">#9f6000</color>
     <color name="on_success_message">#1aa55b</color>
     <color name="on_error_message">#d8000c</color>
+
+    <color name="on_progress_start">#383938</color>
+    <color name="on_progress_end">#000000</color>
 </resources>

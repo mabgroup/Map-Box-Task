@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="accept_offer_btn">قبول کردن</string>
+
     <string name="template_price">s% ريال</string>
+    <string name="offer_has_accepted" translatable="false">Offer Has Accepted</string>
 </resources>

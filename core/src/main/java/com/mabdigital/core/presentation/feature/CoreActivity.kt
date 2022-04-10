@@ -7,19 +7,20 @@ import com.mabdigital.core.R
 import com.mabdigital.core.base.view.BaseActivity
 import com.mabdigital.core.presentation.router.offerIntent
 import com.google.android.gms.tasks.OnCompleteListener
+import com.mabdigital.core.base.model.NotificationModel
 import com.mabdigital.core.base.notification.FIREBASE_TOKEN
 import com.mabdigital.core.base.notification.MyFirebaseMessagingService
+import com.mabdigital.core.base.notification.NOTIFICATION_DATA
 import com.orhanobut.hawk.Hawk
 import timber.log.Timber
 
 class CoreActivity : BaseActivity() {
 
-    override fun navigationGraph(): Int {
-        return R.navigation.start_up_nav
-    }
+    override fun navigationGraph(): Int? = null
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
         observeFireBaseToken()
+        navigateToOffers()
     }
 
     private fun observeFireBaseToken() {
@@ -30,7 +31,7 @@ class CoreActivity : BaseActivity() {
             }
             val token = task.result
 
-            Log.w("FCM token:", token)
+            Log.d("CoreActivity", "FCM token: $token")
 
             val isNewToken = MyFirebaseMessagingService.itsNewToken(token)
             if (isNewToken)
@@ -39,7 +40,13 @@ class CoreActivity : BaseActivity() {
     }
 
     fun navigateToOffers() {
-        startActivity(offerIntent(baseContext))
+        startActivity(offerIntent(baseContext, getIntentModel()))
         overridePendingTransition(0, 0)
+    }
+
+    private fun getIntentModel(): NotificationModel? {
+        return intent?.extras?.run {
+            getParcelable(NOTIFICATION_DATA)
+        }
     }
 }

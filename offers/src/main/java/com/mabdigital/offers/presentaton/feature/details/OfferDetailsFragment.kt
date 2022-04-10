@@ -4,10 +4,15 @@ import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mabdigital.core.base.view.ButtonAction
+import com.mabdigital.core.tools.extentions.finishHoleApp
+import com.mabdigital.offers.R
 import com.mabdigital.offers.databinding.DeatilsBottomSheetBinding
 import com.mabdigital.offers.domain.feature.map.MapActionEvent
 import com.mabdigital.offers.presentaton.feature.activity.OfferShareViewModel
@@ -28,6 +33,7 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_FRAME, 0);
         this.isCancelable = false
+        finishHoleApp()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -63,10 +69,21 @@ class OfferDetailsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         setupView()
+        setupCallBack()
         configView()
     }
 
+    private fun setupCallBack() {
+        binding.acceptOfferBtn.listener = object : ButtonAction {
+            override fun acceptTimerDone() {
+                requireActivity().run { finishAffinity() }
+            }
 
+            override fun onLongClickDone() {
+                Toast.makeText(requireContext(),getString(R.string.offer_has_accepted),Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun configView() {
         view?.post {

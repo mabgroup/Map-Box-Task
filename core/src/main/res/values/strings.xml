@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="accept_offer_btn" translatable="false">قبول کردن</string>
     <string name="app_name">core</string>
 
     <!-- dialogNetworkConnection -->
@@ -9,5 +10,10 @@
     <string name="dialogNetworkConnection_check_wifi_setting">تنظیمات Wifi</string>
     <string name="dialogNetworkConnection_check_data_setting">تنظیمات Data</string>
     <string name="dialogNetworkConnection_close">متوجه شدم</string>
+
+
     <string name="mapbox_access_token">pk.eyJ1Ijoiamhvbi1tYWMyMDE0IiwiYSI6ImNrbTY2bzNmczBsODUycHVpd3ZiNnExa2YifQ.zNqpkfzeHnHfHci-fIzUnA</string>
+    <string name="default_notification_channel_id">MapBoxNotification_Channel</string>
+    <string name="channel_description">Show Offer!</string>
+
 </resources>
