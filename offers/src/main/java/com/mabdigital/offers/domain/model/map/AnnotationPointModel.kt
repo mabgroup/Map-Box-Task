@@ -22,6 +22,5 @@ enum class TerminalLocationTypeEnum {
             Destination.name.lowercase() -> Destination
             else -> Unknown
         }
-
     }
 }

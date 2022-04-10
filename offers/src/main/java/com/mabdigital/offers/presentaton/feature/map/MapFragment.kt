@@ -79,8 +79,40 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        readNotificationData {
+            convertNotificationToPointDetails(it)
+        }
         startMapAfterCheckPermissions()
         setupViewModelObserver()
+    }
+
+    private inline fun readNotificationData(onNotificationDataFound:(NotificationModel?)->Unit) {
+        requireActivity().intent?.extras?.run {
+            val notificationModel = getParcelable<NotificationModel>(NOTIFICATION_DATA)
+            onNotificationDataFound(notificationModel)
+        }
+    }
+
+    private fun convertNotificationToPointDetails(notificationModel: NotificationModel?) {
+        notificationModel?.let {
+            it.array.forEach { data ->
+                listData.add(
+                    PointDetails(
+                        Point.fromLngLat(data.Longitude,data.Latitude),
+                        data.address,
+                        TerminalLocationTypeEnum.toType(data.type)
+                    )
+                )
+            }
+            loadDetails(it.price)
+        }
+    }
+
+    private fun loadDetails(price: String) {
+        val direction = MapFragmentDirections.actionMapFragmentToOfferDetailsFragment(
+            listData.toTypedArray(), price
+        )
+        findNavController().navigate(direction)
     }
 
     private fun setupViewModelObserver() {
